@@ -5,6 +5,8 @@
  */
 package fruteria.ui.app;
 
+import fruteria.ui.app.views.MainView;
+
 /**
  *
  * @author kdieg
@@ -16,6 +18,7 @@ public class FruteriaUiApp {
    */
   public static void main(String[] args) {
     // TODO code application logic here
+    new MainView().setVisible(true);
   }
   
 }
