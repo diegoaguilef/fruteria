@@ -91,6 +91,11 @@ public class FruitsMaintainer extends javax.swing.JFrame {
 
     btnFind.setBackground(new java.awt.Color(153, 153, 255));
     btnFind.setText("Buscar");
+    btnFind.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        btnFindActionPerformed(evt);
+      }
+    });
 
     btnEdit.setBackground(new java.awt.Color(255, 153, 0));
     btnEdit.setText("Editar");
@@ -209,12 +214,13 @@ public class FruitsMaintainer extends javax.swing.JFrame {
             .addGap(6, 6, 6)
             .addComponent(stxPhoto, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)))
         .addGap(18, 18, 18)
-        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-          .addComponent(btnCreate)
-          .addComponent(btnFind)
-          .addComponent(btnEdit)
+        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
           .addComponent(btnList)
-          .addComponent(btnDelete))
+          .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+            .addComponent(btnCreate)
+            .addComponent(btnFind)
+            .addComponent(btnEdit)
+            .addComponent(btnDelete)))
         .addGap(14, 14, 14)
         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         .addContainerGap())
@@ -273,6 +279,22 @@ public class FruitsMaintainer extends javax.swing.JFrame {
       areaList.setText(areaList.getText() + fruit.toString() + "\n");
     }
   }//GEN-LAST:event_btnListActionPerformed
+
+  private void btnFindActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFindActionPerformed
+    // TODO add your handling code here:
+    int id;
+    Fruit fruit;
+    if(!txtId.getText().equals("")){
+      id= Integer.parseInt(txtId.getText());
+      fruit = FruitsController.show(id);
+      
+      if(fruit != null){
+        JOptionPane.showMessageDialog(null, "Fruta encontrada", "Buscar", JOptionPane.INFORMATION_MESSAGE);
+      }else{
+        JOptionPane.showMessageDialog(null, "Fruta no encontrada", "Buscar", JOptionPane.INFORMATION_MESSAGE);
+      }
+    }
+  }//GEN-LAST:event_btnFindActionPerformed
 
   /**
    * @param args the command line arguments
