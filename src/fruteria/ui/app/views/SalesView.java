@@ -5,9 +5,14 @@
  */
 package fruteria.ui.app.views;
 
+import fruteria.ui.app.controller.ClientsController;
 import fruteria.ui.app.controller.FruitsController;
+import fruteria.ui.app.controller.SalesController;
+import fruteria.ui.app.helper.Date;
+import fruteria.ui.app.model.Client;
 import fruteria.ui.app.model.Fruit;
-import javax.swing.Icon;
+import fruteria.ui.app.model.Sale;
+import java.awt.Color;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
@@ -23,6 +28,34 @@ public class SalesView extends javax.swing.JFrame {
   public SalesView() {
     initComponents();
     setLocationRelativeTo(this);
+    fillComboClient();
+  }
+  
+  public void fillComboClient(){
+    comboClient.removeAllItems();
+    comboClient.addItem("Seleccionar");
+    for(Client client:ClientsController.getClients()){
+      comboClient.addItem(client.getRut());
+    }
+  }
+  
+  public boolean dateValidation(String fecha){
+    boolean valid = false;
+    if((fecha != null && fecha.split("/").length == 3) ||
+      (fecha != null && fecha.split("-").length == 3)){
+      valid = true;
+    }
+    return valid;
+  }
+  
+  public String[] parseDate(String fecha){
+    String[] f = {};
+    if(fecha.split("/").length == 3){
+      f = fecha.split("/");
+    }else{
+      f = fecha.split("-");
+    }
+    return f;
   }
 
   /**
@@ -190,6 +223,11 @@ public class SalesView extends javax.swing.JFrame {
 
     btnConfirm.setText("Confirmar Venta");
     btnConfirm.setEnabled(false);
+    btnConfirm.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        btnConfirmActionPerformed(evt);
+      }
+    });
 
     btnCancel.setText("Cancelar Venta");
     btnCancel.addActionListener(new java.awt.event.ActionListener() {
@@ -316,7 +354,7 @@ public class SalesView extends javax.swing.JFrame {
 
   private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
     // TODO add your handling code here:
-    int id;
+    int id, totalStock, currStock;
     String fruit_name;
     Fruit fruit;
     if(!txtFruitId.getText().equals("")){
@@ -327,7 +365,16 @@ public class SalesView extends javax.swing.JFrame {
         ImageIcon icon = new ImageIcon(IMAGES_PATH + "\\fruits\\"+fruit.getPhoto());
         txtFruitName.setText(fruit_name);
         txtFruitPrice.setText(String.valueOf(fruit.getPrice()));
-        txtFruitStock.setText(String.valueOf(fruit.getStock()));
+        currStock = SalesController.currentStockCount(fruit.getId());
+        totalStock = fruit.getStock() - currStock;
+        if(totalStock <= 0 ){
+          txtFruitStock.setForeground(Color.red);
+          btnQuote.setEnabled(false);
+        }else{
+          txtFruitStock.setForeground(new Color(0,204,0));
+          btnQuote.setEnabled(true);
+        }
+        txtFruitStock.setText(String.valueOf(totalStock));
         stxImage.setIcon(icon);
       }
     }
@@ -341,17 +388,21 @@ public class SalesView extends javax.swing.JFrame {
 
   private void btnQuoteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuoteActionPerformed
     // TODO add your handling code here:
-    int fruit_price = 0;
-    int quantity = 0;
-    int total_price;
-    if(!txtFruitStock.getText().equals("0")){
+    int fruit_price = 0, quantity = 0, total_price, stock;
+    if(!txtFruitStock.getText().equals("")
+      && !txtQuantity.getText().equals("")){
       fruit_price = Integer.parseInt(txtFruitPrice.getText());
       quantity = Integer.parseInt(txtQuantity.getText());
-      total_price = fruit_price * quantity;
-      txtTotal.setText(String.valueOf(total_price));
-      btnConfirm.setEnabled(true);
+      stock = Integer.parseInt(txtFruitStock.getText());
+      if(quantity > stock){
+        JOptionPane.showMessageDialog(null, "Producto Cantidad Ingresada es mayor al Stock", "Cotizar Producto", JOptionPane.ERROR_MESSAGE);
+      }else{
+        total_price = fruit_price * quantity;
+        txtTotal.setText(String.valueOf(total_price));
+        btnConfirm.setEnabled(true);
+      }
     }else{
-      JOptionPane.showMessageDialog(null, "Producto sin Stock", "Cotizar Producto", JOptionPane.ERROR_MESSAGE);
+      JOptionPane.showMessageDialog(null, "Debe Ingresar un producto y cantidad de venta", "Cotizar Producto", JOptionPane.ERROR_MESSAGE);
     }
   }//GEN-LAST:event_btnQuoteActionPerformed
 
@@ -359,6 +410,44 @@ public class SalesView extends javax.swing.JFrame {
     // TODO add your handling code here:
     setVisible(false);
   }//GEN-LAST:event_btnCancelActionPerformed
+
+  private void btnConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmActionPerformed
+    // TODO add your handling code here:
+    String fecha;
+    Client client;
+    Fruit fruit;
+    int ticket, quantity, totalPrice;
+    Sale sale;
+    if(dateValidation(txtDate.getText())
+      && comboClient.getSelectedIndex() != 0
+      && !txtFruitId.getText().equals("")
+      && !txtQuantity.getText().equals("")
+      && !txtTotal.getText().equals("")){
+      ticket = Integer.parseInt(txtTicket.getText());
+      client = ClientsController.show(String.valueOf(comboClient.getSelectedItem()));
+      fruit = FruitsController.find(Integer.parseInt(txtFruitId.getText()));
+      quantity = Integer.parseInt(txtQuantity.getText());
+      totalPrice = Integer.parseInt(txtTotal.getText());
+      String[] dateParsed = parseDate(txtDate.getText());
+      int day = Integer.parseInt(dateParsed[0]);
+      int month = Integer.parseInt(dateParsed[1]);
+      int year = Integer.parseInt(dateParsed[2]);
+      Date date = new Date(day, month, year);
+      sale = new Sale(ticket, fruit, client, date, quantity, totalPrice);
+      
+      if(SalesController.create(sale)){
+        JOptionPane.showMessageDialog(null, "Venta realizada", "Venta de Fruta", JOptionPane.INFORMATION_MESSAGE);
+        int currStock = SalesController.currentStockCount(fruit.getId());
+        int totalStock = fruit.getStock() - currStock;
+        txtFruitStock.setText(String.valueOf(totalStock));
+        btnConfirm.setEnabled(false);
+      }else{
+        JOptionPane.showMessageDialog(null, "Error al Crear venta", "Venta de Fruta", JOptionPane.ERROR_MESSAGE);
+      }
+    }else{
+      JOptionPane.showMessageDialog(null, "Debe Completar todos los campos antes de ingresar venta", "Venta Fruta", JOptionPane.ERROR_MESSAGE);
+    }
+  }//GEN-LAST:event_btnConfirmActionPerformed
 
   /**
    * @param args the command line arguments

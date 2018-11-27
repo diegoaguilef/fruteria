@@ -35,10 +35,16 @@ public class Date {
    * @param anio Año de la Fecha a Ingresar
    */
   public Date(int dia, int mes, int anio) {
-        this.dia = dia;
-        this.mes = mes;
-        this.anio = anio;
-    }
+    this.dia = dia;
+    this.mes = mes;
+    this.anio = anio;
+  }
+  
+  public Date(String fecha) {
+    this.dia = Integer.valueOf(fecha.split("/")[0]);
+    this.mes = Integer.valueOf(fecha.split("/")[1]);
+    this.anio = Integer.valueOf(fecha.split("/")[2]);
+  }
 
   /**
    *
