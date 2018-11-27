@@ -13,27 +13,34 @@ import java.util.ArrayList;
  * @author kdieg
  */
 public class ClientsController {
-    private static ArrayList<Client> clients = new ArrayList<>();
-        
-    public static ArrayList<Client> getClients(){
-        return clients;
+  private static ArrayList<Client> clients = new ArrayList<>();
+
+  public static ArrayList<Client> getClients(){
+      return clients;
+  }
+
+  public static void fillClients(){
+    create(new Client("1-1", "Diego", "ResIT", "Av. Providencia 1650", "resit.jpg"));
+    create(new Client("2-2", "Andrés", "ResIT", "Av. Providencia 1650", ""));
+    create(new Client("3-3", "Carlos", "Promac", "Tongoy 750", ""));
+    create(new Client("4-4", "Mario", "Amanecer", "Nueva de Lyon 145", ""));
+  }
+
+  public static boolean create(Client client){
+    for(Client f:clients){
+      if(f.getRut().equals(client.getRut())){
+          return false;
+      }
     }
-    
-    public static boolean create(Client client){
-        for(Client f:clients){
-            if(f.getRut().equals(client.getRut())){
-                return false;
-            }
-        }
-        clients.add(client);
-        return true;
-    }
+    clients.add(client);
+    return true;
+  }
     
     public static boolean update(Client client){
         int i = 0;
         for(Client f:clients){
             if(f.getRut().equals(client.getRut())){
-                clients.add(i, client);
+                clients.set(i, client);
                 return true;
             }
             i++;
@@ -46,7 +53,7 @@ public class ClientsController {
         int i = 0;
         for(Client c:clients){
             if(c.getRut().equals(rut)){
-                client = clients.get(i);
+                client = c;
             }
         }
         return client;

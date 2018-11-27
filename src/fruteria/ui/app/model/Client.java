@@ -11,21 +11,28 @@ package fruteria.ui.app.model;
  */
 public class Client {
   private String rut;
-  private String nombre;
-  private int telefono;
+  private String name;
+  private String enterprise;
+  private String address;
+  private String logo;
 
   /**
    *
    * @param rut
    * @param nombre
-   * @param telefono
+   * @param enterprise
+   * @param address
+   * @param logo
    */
-  public Client(String rut, String nombre, int telefono) {
+  public Client(String rut, String name, String enterprise, String address, String logo) {
     this.rut = rut;
-    this.nombre = nombre;
-    this.telefono = telefono;
+    this.name = name;
+    this.enterprise = enterprise;
+    this.address = address;
+    this.logo = logo;
   }
 
+ 
   /**
    *
    */
@@ -52,37 +59,73 @@ public class Client {
    *
    * @return
    */
-  public String getNombre() {
-    return nombre;
+  public String getName() {
+    return name;
   }
 
   /**
    *
    * @param nombre
    */
-  public void setNombre(String nombre) {
-    this.nombre = nombre;
+  public void setName(String name) {
+    this.name = name;
   }
 
   /**
    *
    * @return
    */
-  public int getTelefono() {
-    return telefono;
+  public String getEnterprise() {
+    return enterprise;
   }
 
   /**
    *
-   * @param telefono
+   * @param enterprise
    */
-  public void setTelefono(int telefono) {
-    this.telefono = telefono;
+  public void setEnterprise(String enterprise) {
+    this.enterprise = enterprise;
+  }
+
+  /**
+   *
+   * @return
+   */
+  public String getAddress() {
+    return address;
+  }
+
+  /**
+   *
+   * @param address
+   */
+  public void setAddress(String address) {
+    this.address = address;
+  }
+
+  /**
+   *
+   * @return
+   */
+  public String getLogo() {
+    return logo;
+  }
+
+  /**
+   *
+   * @param logo
+   */
+  public void setLogo(String logo) {
+    this.logo = logo;
   }
 
   @Override
   public String toString() {
-    return "Client{" + "rut=" + rut + ", nombre=" + nombre + ", telefono=" + telefono + '}';
+    return "Cliente: " + "Rut: " + rut + 
+      ", Nombre: " + name + 
+      ", Empresa: " + enterprise + 
+      ", Dirección: " + address + 
+      ", Logo: " + logo;
   }
   
 }

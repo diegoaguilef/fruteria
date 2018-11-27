@@ -11,7 +11,6 @@ package fruteria.ui.app.model;
  */
 public class Fruit {
   private int id;
-  private String farm;
   private String specie;
   private String variety;
   private int price;
@@ -26,36 +25,36 @@ public class Fruit {
   
   /**
    *
-   * @param farm
    * @param specie
    * @param variety
    * @param price
    * @param stock
    * @param photo
    */
-  public Fruit(String farm, String specie, String variety, int price, int stock, String photo) {
-    this.farm = farm;
+  public Fruit(String specie, String variety, int price, int stock, String photo) {
     this.specie = specie;
     this.variety = variety;
     this.price = price;
     this.stock = stock;
     this.photo = photo;
   }
-
+  
   /**
    *
-   * @return
+   * @param id
+   * @param specie
+   * @param variety
+   * @param price
+   * @param stock
+   * @param photo
    */
-  public String getFarm() {
-    return farm;
-  }
-
-  /**
-   *
-   * @param farm
-   */
-  public void setFarm(String farm) {
-    this.farm = farm;
+  public Fruit(int id, String specie, String variety, int price, int stock, String photo) {
+    this.id = id;
+    this.specie = specie;
+    this.variety = variety;
+    this.price = price;
+    this.stock = stock;
+    this.photo = photo;
   }
 
   /**
@@ -153,9 +152,17 @@ public class Fruit {
   public void setStock(int stock) {
     this.stock = stock;
   }
+  
+  public String getName(){
+    return specie + " " + variety;
+  }
 
   @Override
   public String toString() {
-    return "Fruit{" + "id=" + id + ", farm=" + farm + ", specie=" + specie + ", variety=" + variety + ", price=" + price + ", stock=" + stock + '}';
+    return "Fruta " + "id:" + id + 
+      ", Especie: " + specie + 
+      ", Variedad: " + variety +  
+      ", Precio: " + price + 
+      ", Stock:" + stock;
   }
 }

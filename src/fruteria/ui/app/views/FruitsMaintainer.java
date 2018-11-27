@@ -7,6 +7,7 @@ package fruteria.ui.app.views;
 
 import fruteria.ui.app.controller.FruitsController;
 import fruteria.ui.app.model.Fruit;
+import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 /**
@@ -14,13 +15,31 @@ import javax.swing.JOptionPane;
  * @author kdieg
  */
 public class FruitsMaintainer extends javax.swing.JFrame {
-
+  private final String IMAGES_PATH = "src\\fruteria\\ui\\app\\assets\\images";
   /**
    * Creates new form FruitsMaintainer
    */
   public FruitsMaintainer() {
     initComponents();
     this.setLocationRelativeTo(this);
+  }
+  
+  public void listFruits(){
+    areaList.setText("");
+    for(Fruit fruit:FruitsController.getFruits()){
+      areaList.append(fruit.toString() + "\n");
+    }
+  }
+  
+  public void clearInputs(){
+    txtId.setText(null);
+    txtSpecie.setText(null);
+    txtVariety.setText(null);
+    txtPrice.setText(null);
+    txtStock.setText(null);
+    txtPhoto.setText(null);
+    stxPhoto.setText("\t\t\tFoto");
+    stxPhoto.setIcon(null);
   }
 
   /**
@@ -36,7 +55,6 @@ public class FruitsMaintainer extends javax.swing.JFrame {
     jLabel1 = new javax.swing.JLabel();
     jLabel2 = new javax.swing.JLabel();
     jLabel3 = new javax.swing.JLabel();
-    jLabel4 = new javax.swing.JLabel();
     jLabel5 = new javax.swing.JLabel();
     jLabel6 = new javax.swing.JLabel();
     jLabel7 = new javax.swing.JLabel();
@@ -44,7 +62,6 @@ public class FruitsMaintainer extends javax.swing.JFrame {
     txtId = new javax.swing.JTextField();
     txtSpecie = new javax.swing.JTextField();
     txtVariety = new javax.swing.JTextField();
-    txtFarm = new javax.swing.JTextField();
     txtPrice = new javax.swing.JTextField();
     txtStock = new javax.swing.JTextField();
     txtPhoto = new javax.swing.JTextField();
@@ -67,8 +84,6 @@ public class FruitsMaintainer extends javax.swing.JFrame {
 
     jLabel3.setText("VARIEDAD:");
 
-    jLabel4.setText("PREDIO:");
-
     jLabel5.setText("PRECIO:");
 
     jLabel6.setText("STOCK:");
@@ -78,7 +93,7 @@ public class FruitsMaintainer extends javax.swing.JFrame {
     jLabel8.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
     jLabel8.setText("Mantenedor de Frutas");
 
-    stxPhoto.setText("                   FOTO");
+    stxPhoto.setText("                         FOTO");
     stxPhoto.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
 
     btnCreate.setBackground(new java.awt.Color(0, 204, 0));
@@ -99,9 +114,19 @@ public class FruitsMaintainer extends javax.swing.JFrame {
 
     btnEdit.setBackground(new java.awt.Color(255, 153, 0));
     btnEdit.setText("Editar");
+    btnEdit.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        btnEditActionPerformed(evt);
+      }
+    });
 
     btnDelete.setBackground(new java.awt.Color(255, 0, 0));
     btnDelete.setText("Eliminar");
+    btnDelete.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        btnDeleteActionPerformed(evt);
+      }
+    });
 
     btnList.setBackground(new java.awt.Color(153, 153, 255));
     btnList.setText("Listar");
@@ -125,25 +150,29 @@ public class FruitsMaintainer extends javax.swing.JFrame {
             .addGap(122, 122, 122)
             .addComponent(jLabel8))
           .addGroup(jPanel1Layout.createSequentialGroup()
-            .addGap(10, 10, 10)
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
               .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jLabel1)
-                .addGap(4, 4, 4)
-                .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-              .addComponent(jLabel2)
-              .addComponent(jLabel3)
-              .addComponent(jLabel4)
-              .addComponent(jLabel5)
-              .addComponent(jLabel6)
-              .addComponent(jLabel7))
+                .addGap(10, 10, 10)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                  .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addComponent(jLabel1)
+                    .addGap(4, 4, 4)
+                    .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                  .addComponent(jLabel2)
+                  .addComponent(jLabel3)))
+              .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel5))
+              .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel6))
+              .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel7)))
             .addGap(4, 4, 4)
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
               .addComponent(txtSpecie, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
               .addComponent(txtVariety, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
-              .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(1, 1, 1)
-                .addComponent(txtFarm, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
               .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(1, 1, 1)
                 .addComponent(txtPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -153,8 +182,8 @@ public class FruitsMaintainer extends javax.swing.JFrame {
               .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(2, 2, 2)
                 .addComponent(txtPhoto, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)))
-            .addGap(45, 45, 45)
-            .addComponent(stxPhoto, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addComponent(stxPhoto, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)))
         .addGap(0, 10, Short.MAX_VALUE))
       .addGroup(jPanel1Layout.createSequentialGroup()
         .addContainerGap()
@@ -180,39 +209,39 @@ public class FruitsMaintainer extends javax.swing.JFrame {
         .addGap(11, 11, 11)
         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
           .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGap(6, 6, 6)
+            .addComponent(stxPhoto, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
+          .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+              .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                  .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addGap(3, 3, 3)
+                    .addComponent(jLabel1))
+                  .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(9, 9, 9)
+                .addComponent(jLabel2))
+              .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(26, 26, 26)
+                .addComponent(txtSpecie, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
               .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(3, 3, 3)
-                .addComponent(jLabel1))
-              .addComponent(txtId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGap(9, 9, 9)
-            .addComponent(jLabel2)
-            .addGap(12, 12, 12)
-            .addComponent(jLabel3)
-            .addGap(12, 12, 12)
-            .addComponent(jLabel4)
-            .addGap(12, 12, 12)
-            .addComponent(jLabel5)
-            .addGap(12, 12, 12)
-            .addComponent(jLabel6)
-            .addGap(12, 12, 12)
-            .addComponent(jLabel7))
-          .addGroup(jPanel1Layout.createSequentialGroup()
-            .addGap(26, 26, 26)
-            .addComponent(txtSpecie, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel3))
+              .addComponent(txtVariety, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+              .addComponent(txtPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+              .addComponent(jLabel5))
             .addGap(6, 6, 6)
-            .addComponent(txtVariety, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+              .addComponent(txtStock, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+              .addComponent(jLabel6))
             .addGap(6, 6, 6)
-            .addComponent(txtFarm, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addGap(6, 6, 6)
-            .addComponent(txtPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addGap(6, 6, 6)
-            .addComponent(txtStock, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addGap(6, 6, 6)
-            .addComponent(txtPhoto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-          .addGroup(jPanel1Layout.createSequentialGroup()
-            .addGap(6, 6, 6)
-            .addComponent(stxPhoto, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)))
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+              .addComponent(txtPhoto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+              .addComponent(jLabel7))))
         .addGap(18, 18, 18)
         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
           .addComponent(btnList)
@@ -242,26 +271,26 @@ public class FruitsMaintainer extends javax.swing.JFrame {
 
     private void btnCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateActionPerformed
       // TODO add your handling code here:
-      String farm, specie, variety, photo;
+      String specie, variety, photo;
       int price, stock;
       Fruit fruit = null;
 
       if(!txtSpecie.getText().equals("")
         && !txtVariety.getText().equals("")
-        && !txtFarm.getText().equals("")
         && !txtPrice.getText().equals("")
         && !txtStock.getText().equals("")
         && !txtPhoto.getText().equals("")){
         //
-        farm = txtFarm.getText();
         specie = txtSpecie.getText();
         variety = txtVariety.getText();
         price = Integer.parseInt(txtPrice.getText());
         stock = Integer.parseInt(txtStock.getText());
         photo = txtPhoto.getText();
-        fruit = new Fruit(farm, specie, variety, price, stock, photo);
+        fruit = new Fruit(specie, variety, price, stock, photo);
         
         if(FruitsController.create(fruit)){
+          clearInputs();
+          listFruits();
           JOptionPane.showMessageDialog(null, "Fruta Creada Correctamente", "Crear Fruta", JOptionPane.INFORMATION_MESSAGE);
         }else{
           JOptionPane.showMessageDialog(null, "Error al crear fruta", "Crear Fruta", JOptionPane.ERROR_MESSAGE);
@@ -274,10 +303,7 @@ public class FruitsMaintainer extends javax.swing.JFrame {
 
   private void btnListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListActionPerformed
     // TODO add your handling code here:
-    areaList.setText("");
-    for(Fruit fruit:FruitsController.getFruits()){
-      areaList.setText(areaList.getText() + fruit.toString() + "\n");
-    }
+    listFruits();
   }//GEN-LAST:event_btnListActionPerformed
 
   private void btnFindActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFindActionPerformed
@@ -286,15 +312,76 @@ public class FruitsMaintainer extends javax.swing.JFrame {
     Fruit fruit;
     if(!txtId.getText().equals("")){
       id= Integer.parseInt(txtId.getText());
-      fruit = FruitsController.show(id);
-      
+      fruit = FruitsController.find(id);
       if(fruit != null){
+        txtSpecie.setText(fruit.getSpecie());
+        txtVariety.setText(fruit.getVariety());
+        txtPrice.setText(String.valueOf(fruit.getPrice()));
+        txtStock.setText(String.valueOf(fruit.getStock()));
+        txtPhoto.setText(fruit.getPhoto());
+        ImageIcon icon = new ImageIcon(IMAGES_PATH + "\\fruits\\" + fruit.getPhoto());
+        stxPhoto.setIcon(icon);
         JOptionPane.showMessageDialog(null, "Fruta encontrada", "Buscar", JOptionPane.INFORMATION_MESSAGE);
       }else{
         JOptionPane.showMessageDialog(null, "Fruta no encontrada", "Buscar", JOptionPane.INFORMATION_MESSAGE);
       }
+    }else{
+      JOptionPane.showMessageDialog(null, "Debe Ingresar Rut", "Buscar", JOptionPane.WARNING_MESSAGE);
     }
   }//GEN-LAST:event_btnFindActionPerformed
+
+  private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
+    // TODO add your handling code here:
+    String specie, variety, photo;
+    int price, stock, id;
+    Fruit fruit = null;
+
+    if(!txtId.getText().equals("")
+      && !txtSpecie.getText().equals("")
+      && !txtVariety.getText().equals("")
+      && !txtPrice.getText().equals("")
+      && !txtStock.getText().equals("")
+      && !txtPhoto.getText().equals("")){
+      //
+      id = Integer.parseInt(txtId.getText());
+      specie = txtSpecie.getText();
+      variety = txtVariety.getText();
+      price = Integer.parseInt(txtPrice.getText());
+      stock = Integer.parseInt(txtStock.getText());
+      photo = txtPhoto.getText();
+      fruit = new Fruit(id, specie, variety, price, stock, photo);
+
+      if(FruitsController.update(fruit)){
+        clearInputs();
+        listFruits();
+        JOptionPane.showMessageDialog(null, "Fruta Editada Correctamente", "Editar Fruta", JOptionPane.INFORMATION_MESSAGE);
+      }else{
+        JOptionPane.showMessageDialog(null, "Error al Editar fruta", "Editar Fruta", JOptionPane.ERROR_MESSAGE);
+      }
+    }else{
+      JOptionPane.showMessageDialog(null, "Complete todos los campos ", "Editar Fruta", JOptionPane.WARNING_MESSAGE);
+    }
+    
+  }//GEN-LAST:event_btnEditActionPerformed
+
+  private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+    // TODO add your handling code here:
+    
+    int id;
+    if(!txtId.getText().equals("")){
+      //
+      id = Integer.parseInt(txtId.getText());
+      if(FruitsController.delete(id)){
+        clearInputs();
+        listFruits();
+        JOptionPane.showMessageDialog(null, "Fruta Eliminada", "Eliminar Fruta", JOptionPane.INFORMATION_MESSAGE);
+      }else{
+        JOptionPane.showMessageDialog(null, "Error al Eliminar fruta", "Eliminar Fruta", JOptionPane.ERROR_MESSAGE);
+      }
+    }else{
+      JOptionPane.showMessageDialog(null, "Debe ingresar ID de Fruta", "Eliminar Fruta", JOptionPane.WARNING_MESSAGE);
+    }
+  }//GEN-LAST:event_btnDeleteActionPerformed
 
   /**
    * @param args the command line arguments
@@ -341,7 +428,6 @@ public class FruitsMaintainer extends javax.swing.JFrame {
   private javax.swing.JLabel jLabel1;
   private javax.swing.JLabel jLabel2;
   private javax.swing.JLabel jLabel3;
-  private javax.swing.JLabel jLabel4;
   private javax.swing.JLabel jLabel5;
   private javax.swing.JLabel jLabel6;
   private javax.swing.JLabel jLabel7;
@@ -349,7 +435,6 @@ public class FruitsMaintainer extends javax.swing.JFrame {
   private javax.swing.JPanel jPanel1;
   private javax.swing.JScrollPane jScrollPane1;
   private javax.swing.JLabel stxPhoto;
-  private javax.swing.JTextField txtFarm;
   private javax.swing.JTextField txtId;
   private javax.swing.JTextField txtPhoto;
   private javax.swing.JTextField txtPrice;

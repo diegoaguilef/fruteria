@@ -5,14 +5,14 @@
  */
 package fruteria.ui.app.model;
 
-import java.util.Date;
+import fruteria.ui.app.helper.Date;
 
 /**
  *
  * @author kdieg
  */
-public class Sales {
-  private int id;
+public class Sale {
+  private int ticket;
   private Fruit fruit;
   private Client client;
   private Date date;
@@ -22,22 +22,24 @@ public class Sales {
   /**
    *
    */
-  public Sales() {
+  public Sale() {
   }
 
   /**
    *
+   * @param ticket
    * @param fruit
    * @param client
    * @param quantity
    * @param totalPrice
    */
-  public Sales(Fruit fruit, Client client, Date date, int quantity, int totalPrice) {
-        this.fruit = fruit;
-        this.client = client;
-        this.date = date;
-        this.quantity = quantity;
-        this.totalPrice = totalPrice;
+  public Sale(int ticket, Fruit fruit, Client client, Date date, int quantity, int totalPrice) {
+    this.ticket = ticket;    
+    this.fruit = fruit;
+    this.client = client;
+    this.date = date;
+    this.quantity = quantity;
+    this.totalPrice = totalPrice;
   }
 
     /**
@@ -116,21 +118,25 @@ public class Sales {
    *
    * @return
    */
-  public int getId() {
-    return id;
+  public int getTicket() {
+    return ticket;
   }
 
   /**
    *
    * @param id
    */
-  public void setId(int id) {
-    this.id = id;
+  public void setTicket(int id) {
+    this.ticket = ticket;
   }
 
   @Override
   public String toString() {
-    return "Sales{" + "id=" + id + ", fruit=" + fruit + ", client=" + client + ", quantity=" + quantity + ", totalPrice=" + totalPrice + '}';
+    return "Venta " + "Boleta: " + ticket + 
+      ", Producto: " + fruit + 
+      ", Cliente: " + client.getName() + 
+      ", Cantidad: " + quantity + 
+      ", Precio Total Venta: " + totalPrice;
   }
   
 }
